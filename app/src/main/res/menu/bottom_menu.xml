@@ -2,10 +2,15 @@
 <menu xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android">
     <item
-        android:id="@+id/menu_login"
+        android:id="@+id/menu_home"
         android:icon="@drawable/ic_vk_social_network_logo"
         android:title="Профиль" />
     <item
+        android:id="@+id/menu_friends"
         android:icon="@drawable/ic_friends"
         android:title="Друзья" />
+    <item
+        android:id="@+id/menu_community"
+        android:icon="@drawable/ic_community"
+        android:title="Сообщества" />
 </menu>

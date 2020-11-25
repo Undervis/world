@@ -37,6 +37,7 @@ dependencies {
     implementation 'org.jsoup:jsoup:1.13.1'
     implementation 'com.squareup.picasso:picasso:2.71828'
     implementation 'com.vk:androidsdk:2.4.0'
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     testImplementation 'junit:junit:4.+'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'

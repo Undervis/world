@@ -1,15 +1,19 @@
 package com.example.jsouptest;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.viewpager.widget.ViewPager;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
+import android.view.MenuItem;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -19,6 +23,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -38,20 +43,72 @@ public class MainActivity extends AppCompatActivity {
     private String photo;
     private String domain;
     private String userID;
-    private String access_token = "675c5e7f675c5e7f675c5e7f556728bf0e6675c675c5e7f38f08b5db2773cdc5fc078b0";
-    public static String accessTokenByUser;
-    public static String idByUser;
+    private String accessTokenByUser;
+    private String idByUser;
+    private ViewPager viewPager;
+    MyAdapter adapter = new MyAdapter(getSupportFragmentManager());
+
+    BottomNavigationView.OnNavigationItemSelectedListener onNavigationItemSelectedListener =
+            new BottomNavigationView.OnNavigationItemSelectedListener() {
+                @SuppressLint("NonConstantResourceId")
+                @Override
+                public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                    switch (item.getItemId()){
+                        case R.id.menu_home:
+                            viewPager.setAdapter(adapter);
+                            viewPager.setCurrentItem(0);
+                            return true;
+                        case R.id.menu_friends:
+                            viewPager.setAdapter(adapter);
+                            viewPager.setCurrentItem(1);
+                            return true;
+                    }
+                    return false;
+                }
+            };
+
+    public static class MyAdapter extends FragmentPagerAdapter {
+
+        MyAdapter(@NonNull FragmentManager fm) {
+            super(fm);
+        }
+
+        @Override
+        public int getCount() {
+            return 2;
+        }
+
+        @NonNull
+        @Override
+        public Fragment getItem(int position) {
+            switch (position) {
+                case 1:
+                case 2:
+                    return new FriendsFragment();
+
+                default:
+                    return new HomeFragment();
+            }
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        if (accessTokenByUser != null){
-            access_token = accessTokenByUser;
-        }
+        Intent intent = getIntent();
+        accessTokenByUser = intent.getStringExtra("access_token");
+        idByUser = intent.getStringExtra("user_id");
 
-        recyclerView = findViewById(R.id.recycler);
+        BottomNavigationView bottomNavigationView = findViewById(R.id.bottomNavigationView);
+        bottomNavigationView.setOnNavigationItemSelectedListener(onNavigationItemSelectedListener);
+
+        viewPager = findViewById(R.id.view_pager);
+        viewPager.setAdapter(adapter);
+        viewPager.setCurrentItem(0);
+
+        /*recyclerView = findViewById(R.id.recycler);
         EditText ed_userID = findViewById(R.id.ed_user_id);
         Button button = findViewById(R.id.button);
         button.setOnClickListener(new View.OnClickListener() {
@@ -60,7 +117,7 @@ public class MainActivity extends AppCompatActivity {
                 friends.clear();
                 getFriendsFromID(ed_userID.getText().toString());
             }
-        });
+        });*/
     }
 
     private void extractJSON(String urlGetID){
@@ -119,7 +176,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void getFriendsFromID(String domain){
-        String url = URLGenerator.GenerateURLUserID(domain, access_token);
+        String url = URLGenerator.GenerateURLUserID(domain, accessTokenByUser);
         RequestQueue queue = Volley.newRequestQueue(getApplicationContext());
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
             @Override
@@ -128,7 +185,7 @@ public class MainActivity extends AppCompatActivity {
                     JSONArray array = response.getJSONArray("response");
                     JSONObject object = array.getJSONObject(0);
                     userID = object.getString("id");
-                    String url = URLGenerator.GenerateURLFriends(userID, access_token);
+                    String url = URLGenerator.GenerateURLFriends(userID, accessTokenByUser);
                     extractJSON(url);
                     Log.i("flag", userID);
                 } catch (JSONException e) {

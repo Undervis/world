@@ -2,4 +2,6 @@
     <string name="app_name">Jsoup Test</string>
     <string name="SHA1">76EF9E2928778F42691C66811D8EE1A5DCE0CE03</string>
     <integer name="client_id">7659889</integer>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

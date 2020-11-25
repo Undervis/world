@@ -13,4 +13,7 @@
         <item name="android:statusBarColor" tools:targetApi="l">@color/vk_main_color</item>
         <!-- Customize your theme here. -->
     </style>
+    <style name="ProgressBar" parent="Theme.JsoupTest">
+        <item name="colorAccent">@color/vk_dark_color</item>
+    </style>
 </resources>
